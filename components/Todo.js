@@ -34,9 +34,15 @@ class Todo {
     const todoDateEl = this._todoElement.querySelector(".todo__date");
 
     todoNameEl.textContent = this._data.name;
-    todoDateEl.textContent = this._data.date
-      ? new Date(this._data.date).toLocaleDateString()
-      : "";
+    todoDateEl.textContent = this._data.date;
+    const dueDate = new Date(this._date);
+    if (!isNaN(dueDate)) {
+      this._dateEl.textContent = `Due: ${dueDate.toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })}`;
+    }
 
     this._generateCheckboxEl();
     this._setEventListeners();

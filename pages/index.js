@@ -42,11 +42,15 @@ addTodoForm.addEventListener("submit", (evt) => {
   const date = new Date(dateInput);
   date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
 
+  const renderTodo = (item) => {
+    const todo = generateTodo(item);
+    todosList.append(todo);
+  };
+
   const id = uuidv4();
   const values = { name, date: dateInput, id };
 
-  const todoElement = generateTodo(values);
-  todosList.append(todoElement);
+  renderTodo(values);
 
   closeModal(addTodoPopup);
   addTodoForm.reset();
