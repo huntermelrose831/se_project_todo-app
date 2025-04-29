@@ -17,9 +17,25 @@ const closeModal = (modal) => {
   modal.classList.remove("popup_visible");
 };
 
+const formatDateString = (dateStr) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return `Due: ${date.toLocaleDateString("en-US", options)}`;
+};
+
 const generateTodo = (data) => {
-  const todo = new Todo(data, "#todo-template");
+  const formattedData = {
+    ...data,
+    date: formatDateString(data.date),
+  };
+  const todo = new Todo(formattedData, "#todo-template");
   return todo.getView();
+};
+
+const renderTodo = (item) => {
+  const todo = generateTodo(item);
+  todosList.append(todo);
 };
 
 addTodoButton.addEventListener("click", () => {
@@ -39,14 +55,6 @@ addTodoForm.addEventListener("submit", (evt) => {
   const name = evt.target.name.value;
   const dateInput = evt.target.date.value;
 
-  const date = new Date(dateInput);
-  date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-
-  const renderTodo = (item) => {
-    const todo = generateTodo(item);
-    todosList.append(todo);
-  };
-
   const id = uuidv4();
   const values = { name, date: dateInput, id };
 
@@ -58,6 +66,5 @@ addTodoForm.addEventListener("submit", (evt) => {
 });
 
 initialTodos.forEach((item) => {
-  const todo = generateTodo(item);
-  todosList.append(todo);
+  renderTodo(item);
 });
