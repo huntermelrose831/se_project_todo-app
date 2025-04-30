@@ -2,6 +2,7 @@ class Todo {
   constructor(data, selector) {
     this._data = data;
     this._templateElement = document.querySelector(selector);
+    this._date = data.date;
   }
 
   _setEventListeners() {
@@ -31,10 +32,9 @@ class Todo {
       .cloneNode(true);
 
     const todoNameEl = this._todoElement.querySelector(".todo__name");
-    const todoDateEl = this._todoElement.querySelector(".todo__date");
+    this._dateEl = this._todoElement.querySelector(".todo__date");
 
     todoNameEl.textContent = this._data.name;
-    todoDateEl.textContent = this._data.date;
     const dueDate = new Date(this._date);
     if (!isNaN(dueDate)) {
       this._dateEl.textContent = `Due: ${dueDate.toLocaleString("en-US", {
