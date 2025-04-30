@@ -17,18 +17,7 @@ const closeModal = (modal) => {
   modal.classList.remove("popup_visible");
 };
 
-const formatDateString = (dateStr) => {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  const options = { year: "numeric", month: "short", day: "numeric" };
-  return `Due: ${date.toLocaleDateString("en-US", options)}`;
-};
-
-const generateTodo = (data) => {
-  const formattedData = {
-    ...data,
-    date: formatDateString(data.date),
-  };
+const generateTodo = (formattedData) => {
   const todo = new Todo(formattedData, "#todo-template");
   return todo.getView();
 };
