@@ -13,6 +13,20 @@ class Popup {
     this._popupCloseBtn.addEventListener("click", (evt) => {
       this.close();
     });
+
+    document.addEventListener("keydown", (evt) => {
+      this._handleEscClose(evt);
+    });
+    this._popupElement.addEventListener("mousedown", (evt) => {
+      if (evt.target.classList.contains("popup_visible")) {
+        this.close();
+      }
+    });
+  }
+  _handleEscClose(evt) {
+    if (evt.key === "Escape") {
+      this.close();
+    }
   }
 }
 export default Popup;
