@@ -5,21 +5,45 @@ import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import Popup from "../components/Popup.js";
+import TodoCounter from "../components/TodoCounter.js";
 const addTodoButton = document.querySelector(".button_action_add");
 const addTodoPopupEl = document.querySelector("#add-todo-popup");
 const addTodoForm = document.forms["add-todo-form"];
 const addTodoCloseBtn = addTodoPopupEl.querySelector(".popup__close");
 const todosList = document.querySelector(".todos__list");
+
+const todoCounter = new TodoCounter(initialTodos, ".counter__text");
+
+function handleCheck(completed) {
+  todoCounter.updateCompleted(completed);
+}
+function handleDelete(completed) {
+  todoCounter.updateTotal(false);
+}
+
 const addTodoPopup = new PopupWithForm({
   popupSelector: "#add-todo-popup",
-  handleFormSubmit: () => {},
+  handleFormSubmit: (evt) => {
+    const name = evt.target.name.value;
+    const dateInput = evt.target.date.value;
+
+    const id = uuidv4();
+    const values = { name, date: dateInput, id };
+
+    renderTodo(values);
+
+    addTodoPopup.close();
+    addTodoForm.reset();
+    newTodoValidator.resetValidation();
+  },
 });
+
 addTodoPopup.setEventListeners();
 
 const section = new Section({
   items: initialTodos,
   renderer: (item) => {
-    const todo = new Todo(item, "#todo-template");
+    const todo = new Todo(item, "#todo-template", handleCheck, handleDelete);
     return todo.getView();
   },
   containerSelector: ".todos__list",
@@ -27,7 +51,12 @@ const section = new Section({
 section.renderItems();
 
 const generateTodo = (formattedData) => {
-  const todo = new Todo(formattedData, "#todo-template");
+  const todo = new Todo(
+    formattedData,
+    "#todo-template",
+    handleCheck,
+    handleDelete
+  );
   return todo.getView();
 };
 
@@ -46,23 +75,3 @@ addTodoCloseBtn.addEventListener("click", () => {
 
 const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
 newTodoValidator.enableValidation();
-
-addTodoForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-
-  const name = evt.target.name.value;
-  const dateInput = evt.target.date.value;
-
-  const id = uuidv4();
-  const values = { name, date: dateInput, id };
-
-  renderTodo(values);
-
-  addTodoPopup.close();
-  addTodoForm.reset();
-  newTodoValidator.resetValidation();
-});
-
-//initialTodos.forEach((item) => {
-//renderTodo(item);
-//});
