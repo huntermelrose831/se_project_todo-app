@@ -18,6 +18,9 @@ function handleCheck(completed) {
   todoCounter.updateCompleted(completed);
 }
 function handleDelete(completed) {
+  if (completed) {
+    todoCounter.updateCompleted(false);
+  }
   todoCounter.updateTotal(false);
 }
 
